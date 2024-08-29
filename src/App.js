@@ -1,42 +1,40 @@
 import { useState } from "react";
 import Button from "./Button";
-import Dice from "./Dice";
+import Board from "./Board";
 
 function randomNum(n) {
   return Math.ceil(Math.random() * n);
 }
 
 function App() {
-  const [num, setNum] = useState(1);
-  const [sum, setSum] = useState(0);
-  const [records, setRecord] = useState([]);
+  // num, sum은 records로부터 계산 가능하므로 삭제
+  const [myRecords, setMyRecord] = useState([]);
+  const [yourRecords, setYourRecord] = useState([]);
 
   const handleRollClick = () => {
-    const nextNum = randomNum(6);
-    setNum(nextNum);
-    setSum(sum + nextNum);
-    const newRecords = [...records, nextNum];
-    setRecord(newRecords);
+    const nextMyNum = randomNum(6);
+    const nextYourNum = randomNum(6);
+    const newMyRecords = [...myRecords, nextMyNum];
+    const newYourRecords = [...yourRecords, nextYourNum];
+    setMyRecord(newMyRecords);
+    setYourRecord(newYourRecords);
   }
 
   const handleClearClick = () => {
-    setNum(1);
-    setSum(0);
-    setRecord([]);
+    setMyRecord([]);
+    setYourRecord([]);
   }
 
   return (
-    <div>
+    <div className="App">
       <div>
-        <Button onClick={handleRollClick}>던지기</Button>
-        <Button onClick={handleClearClick}>처음부터</Button>
+        <Button className="App-button" color="blue" onClick={handleRollClick}>던지기</Button>
+        <Button className="App-button" color="red" onClick={handleClearClick}>처음부터</Button>
       </div>
-      <h2>나</h2>
-      <Dice num={num} />
-      <h2>총점</h2>
-      <p>{sum}</p>
-      <h2>기록</h2>
-      {records.join(', ')}
+      <div>
+        <Board name="나" color="blue" records={myRecords} />
+        <Board name="너" color="red" records={yourRecords} />
+      </div>
     </div>
   );
 }
